@@ -21,11 +21,6 @@ module.exports.createUser = (req, res, next) => {
   const {
     name, email,
   } = req.body;
-  // User.findOne({ email })
-  //   .then(() => {
-  //     // if (mail) {
-  //     //   next(new ConflictError('Пользователь с таким email уже существует.'));
-  //     // } else {
   bcrypt.hash(req.body.password, 10)
     .then((hash) => User.create({
       name, email, password: hash,
@@ -60,7 +55,6 @@ module.exports.login = (req, res, next) => {
       const token = jwt.sign(
         { _id: user._id },
         NODE_ENV === 'production' ? JWT_SECRET : 'dev_secret',
-        // 'some-secret-key',
         { expiresIn: '7d' },
       );
       res.status(200).send({ token });
@@ -87,7 +81,6 @@ module.exports.updateProfile = (req, res, next) => {
     });
 };
 
-// console.log(JWT_SECRET);
 // return res.cookie('jwt', token, {
 //   // token - наш JWT токен, который мы отправляем
 //   maxAge: 3600000 * 24 * 7,
