@@ -2,25 +2,20 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-// const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
-// const rateLimit = require('express-rate-limit');
 const cors = require('cors');
 const helmet = require('helmet');
 const { limiter } = require('./middlewares/limiter');
-// const validator = require('validator');
-// const { login, createUser } = require('./controllers/users');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const auth = require('./middlewares/auth');
 const error = require('./middlewares/error');
-// const BadRequestError = require('./errors/bad-request-err');
 const NotFoundError = require('./errors/not-found-err');
 
 const options = {
   origin: [
     'http://localhost:3000',
     'http://localhost:3001',
-    'https://mestoproject.nomoredomains.club',
+    'https://diploma.project.nomoredomains.club',
   ],
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   preFlightContinue: false,
@@ -28,13 +23,6 @@ const options = {
   allowedHeaders: ['Content-Type', 'origin', 'Authorization'],
   credentials: true,
 };
-
-// const limiter = rateLimit({
-//   windowMs: 15 * 60 * 1000, // 15 minutes
-//   max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
-//   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-//   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-// });
 
 const app = express();
 const { PORT = 3000 } = process.env;
