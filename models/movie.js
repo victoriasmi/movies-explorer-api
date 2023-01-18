@@ -1,24 +1,19 @@
 const mongoose = require('mongoose');
-// const urlRegExp = require('urlregex');
 
 const movieSchema = new mongoose.Schema({
   country: {
     type: String,
     required: true,
-    // minlength: 2, // минимальная длина имени — 2 символа
-    // maxlength: 30, // а максимальная — 30 символов
   },
   director: {
     type: String,
     required: true,
-    // minlength: 2, // минимальная длина имени — 2 символа
-    // maxlength: 30, // а максимальная — 30 символов
   },
   duration: {
     type: Number,
     required: true,
   },
-  duration: {
+  year: {
     type: String,
     required: true,
   },
@@ -26,29 +21,25 @@ const movieSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  image: { //url
+  image: { // url
     type: String,
     required: true,
-    // проверка на url тут????
   },
-  trailerLink: { //url
+  trailerLink: { // url
     type: String,
     required: true,
-    // проверка на url тут????
   },
-  thumbnail: { //url
+  thumbnail: { // url
     type: String,
     required: true,
-    // проверка на url тут????
   },
-  owner: { // _id поле?
+  owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
     required: true,
   },
-  movieId: { // id поле?
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'user',
+  movieId: {
+    type: String,
     required: true,
   },
   nameRU: {
@@ -59,14 +50,6 @@ const movieSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  //   likes: {
-  //     type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }],
-  //     default: [],
-  //   },
-  //   createdAt: {
-  //     type: Date, // имя — это строка
-  //     default: Date.now,
-  //   },
 });
 
 // создаём модель и экспортируем её

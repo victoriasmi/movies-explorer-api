@@ -2,17 +2,18 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const { celebrate, Joi } = require('celebrate');
+// const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
-const rateLimit = require('express-rate-limit');
-const helmet = require('helmet');
-const validator = require('validator');
+// const rateLimit = require('express-rate-limit');
 const cors = require('cors');
-const { login, createUser } = require('./controllers/users');
+const helmet = require('helmet');
+const { limiter } = require('./middlewares/limiter');
+// const validator = require('validator');
+// const { login, createUser } = require('./controllers/users');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const auth = require('./middlewares/auth');
 const error = require('./middlewares/error');
-const BadRequestError = require('./errors/bad-request-err');
+// const BadRequestError = require('./errors/bad-request-err');
 const NotFoundError = require('./errors/not-found-err');
 
 const options = {
@@ -28,12 +29,12 @@ const options = {
   credentials: true,
 };
 
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
-  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-});
+// const limiter = rateLimit({
+//   windowMs: 15 * 60 * 1000, // 15 minutes
+//   max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+//   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+//   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+// });
 
 const app = express();
 const { PORT = 3000 } = process.env;
@@ -53,38 +54,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/bitfilmsdb');
 app.use(requestLogger); // подключаем логгер запросов
 // за ним идут все обработчики роутов
 
-const method = (value) => {
-  const result = validator.isURL(value);
-  if (result) {
-    return value;
-  } throw new BadRequestError('Некорректная ссылка.');
-};
-
-app.post(
-  '/signup',
-  celebrate({
-    body: Joi.object().keys({
-      email: Joi.string().required().email(),
-      password: Joi.string().required(),
-      name: Joi.string().min(2).max(30),
-      about: Joi.string().min(2).max(30),
-      avatar: Joi.string().custom(method),
-    }),
-  }),
-  createUser,
-);
-
-app.post(
-  '/signin',
-  celebrate({
-    body: Joi.object().keys({
-      email: Joi.string().required().email(),
-      // .email({ tlds: { allow: false } }),
-      password: Joi.string().required(),
-    }),
-  }),
-  login,
-);
+app.use('/', require('./routes/index'));
 
 // авторизация
 app.use(auth);
