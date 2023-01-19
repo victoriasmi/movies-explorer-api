@@ -9,6 +9,8 @@ const { limiter } = require('./middlewares/limiter');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const auth = require('./middlewares/auth');
 const error = require('./middlewares/error');
+
+const { MONGODB_ADDRESS, NODE_ENV } = process.env;
 const NotFoundError = require('./errors/not-found-err');
 
 const options = {
@@ -30,17 +32,17 @@ const { PORT = 3000 } = process.env;
 app.use('*', cors(options));
 
 // Apply the rate limiting middleware to all requests
-app.use(limiter);
 app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 // app.use(cookieParser());
 
 // подключаемся к серверу mongo
-mongoose.connect('mongodb://127.0.0.1:27017/bitfilmsdb');
+mongoose.connect(NODE_ENV === 'production' ? MONGODB_ADDRESS : 'mongodb://127.0.0.1:27017/bitfilmsdb');
 
 app.use(requestLogger); // подключаем логгер запросов
 // за ним идут все обработчики роутов
+app.use(limiter);
 
 app.use('/', require('./routes/index'));
 

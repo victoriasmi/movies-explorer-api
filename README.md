@@ -16,4 +16,6 @@ URL сервера backend: api.diploma.project.nomoredomains.rocks
 ## Запуск проекта
 
 `npm run start` — запускает сервер   
+
+
 `npm run dev` — запускает сервер с hot-reload

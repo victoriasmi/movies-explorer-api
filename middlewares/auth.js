@@ -2,13 +2,16 @@ const jwt = require('jsonwebtoken');
 const UnauthorizedError = require('../errors/unauthorized-err');
 
 const { JWT_SECRET = 'dev_secret' } = process.env;
+const {
+  unauthorizedError,
+} = require('../constants');
 
 module.exports = (req, res, next) => {
   // достаём авторизационный заголовок
   const { authorization } = req.headers;
   // убеждаемся, что он есть или начинается с Bearer
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    next(new UnauthorizedError('No authorization'));
+    next(new UnauthorizedError(unauthorizedError));
   }
 
   const token = authorization.replace('Bearer ', '');
@@ -21,7 +24,7 @@ module.exports = (req, res, next) => {
       JWT_SECRET,
     );
   } catch (err) {
-    next(new UnauthorizedError('Такого пользователя не существует.'));
+    next(new UnauthorizedError(unauthorizedError));
   }
   req.user = payload; // записываем пейлоуд в объект запроса
   next(); // пропускаем запрос дальше

@@ -8,6 +8,9 @@ const BadRequestError = require('../errors/bad-request-err');
 const UnauthorizedError = require('../errors/unauthorized-err');
 const NotFoundError = require('../errors/not-found-err');
 const ConflictError = require('../errors/conflict-err');
+const {
+  unauthorizedError, conflictError, badRequestError, notFoundError,
+} = require('../constants');
 
 module.exports.getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
@@ -33,9 +36,9 @@ module.exports.createUser = (req, res, next) => {
     // })
     .catch((err) => {
       if (err.code === 11000) {
-        next(new ConflictError('Пользователь с таким email уже существует.'));
+        next(new ConflictError(conflictError));
       } else if (err.name === 'ValidationError') {
-        next(new BadRequestError('Некорректные данные.'));
+        next(new BadRequestError(badRequestError));
       } else {
         next(err);
       }
@@ -49,7 +52,7 @@ module.exports.login = (req, res, next) => {
   User.findUserByCredentials(email, password)
     .then((user) => {
       if (!user) {
-        return next(new UnauthorizedError('Ошибка аутентификации.'));
+        return next(new UnauthorizedError(unauthorizedError));
       }
       // аутентификация успешна! пользователь в переменной user
       const token = jwt.sign(
@@ -67,14 +70,14 @@ module.exports.updateProfile = (req, res, next) => {
   const { name, email } = req.body;
   User.findByIdAndUpdate(req.user._id, { name, email }, { new: true, runValidators: true })
     .orFail(() => {
-      next(new NotFoundError('Пользователь по указанному _id не найден.'));
+      next(new NotFoundError(notFoundError));
     })
     .then((user) => {
       res.status(200).send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('Некорректные данные.'));
+        next(new BadRequestError(badRequestError));
       } else {
         next(err);
       }

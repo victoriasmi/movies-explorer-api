@@ -3,6 +3,9 @@ const Movie = require('../models/movie');
 const BadRequestError = require('../errors/bad-request-err');
 const ForbiddenError = require('../errors/forbidden-err');
 const NotFoundError = require('../errors/not-found-err');
+const {
+  badRequestError, notFoundError, forbiddenError,
+} = require('../constants');
 
 module.exports.getMovie = (req, res, next) => {
   Movie.find({}).sort({ createdAt: -1 })
@@ -37,7 +40,7 @@ module.exports.createMovie = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('Переданы некорректные данные.'));
+        next(new BadRequestError(badRequestError));
       }
       next(err);
     });
@@ -46,7 +49,7 @@ module.exports.createMovie = (req, res, next) => {
 module.exports.deleteMovie = (req, res, next) => {
   Movie.findById(req.params.movieId)
     .orFail(() => {
-      throw new NotFoundError('Карточка с указанным _id не найдена.');
+      throw new NotFoundError(notFoundError);
     })
     .then((data) => {
       if (data.owner.valueOf() === req.user._id) {
@@ -55,12 +58,12 @@ module.exports.deleteMovie = (req, res, next) => {
             res.status(200).send({ data: movie });
           });
       } else {
-        next(new ForbiddenError('У вас нет прав для осуществления этого действия.'));
+        next(new ForbiddenError(forbiddenError));
       }
     })
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
-        next(new BadRequestError('Переданы некорректные данные.'));
+        next(new BadRequestError(badRequestError));
       }
       next(err);
     });
