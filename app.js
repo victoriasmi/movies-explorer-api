@@ -17,7 +17,7 @@ const options = {
   origin: [
     'http://localhost:3000',
     'http://localhost:3001',
-    'https://diploma.project.nomoredomains.club',
+    'https://diploma.project.nomoredomains.rocks',
   ],
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   preFlightContinue: false,
