@@ -40,8 +40,7 @@ module.exports.postmovieValidation = celebrate({
     description: Joi.string().required(),
     image: Joi.string().required().custom(method),
     trailerLink: Joi.string().required().custom(method),
-    thumbnail: Joi.string().required().custom(method),
-    movieId: Joi.number().required(),
+    id: Joi.number().required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
   }),
@@ -49,6 +48,6 @@ module.exports.postmovieValidation = celebrate({
 
 module.exports.deletemovieValidation = celebrate({
   params: Joi.object().keys({
-    movieId: Joi.string().length(24).hex(),
+    _id: Joi.string().length(24).hex(),
   }),
 });

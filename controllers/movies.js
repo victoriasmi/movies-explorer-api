@@ -18,7 +18,7 @@ module.exports.getMovie = (req, res, next) => {
 module.exports.createMovie = (req, res, next) => {
   const {
     country, director, duration, year, description, image,
-    trailerLink, thumbnail, movieId, nameRU, nameEN,
+    trailerLink, id, nameRU, nameEN,
   } = req.body;
   Movie.create({
     country,
@@ -28,8 +28,7 @@ module.exports.createMovie = (req, res, next) => {
     description,
     image,
     trailerLink,
-    thumbnail,
-    movieId,
+    id,
     nameRU,
     nameEN,
     owner: req.user._id,
@@ -47,13 +46,13 @@ module.exports.createMovie = (req, res, next) => {
 };
 
 module.exports.deleteMovie = (req, res, next) => {
-  Movie.findById(req.params.movieId)
+  Movie.findById(req.params._id)
     .orFail(() => {
       throw new NotFoundError(notFoundError);
     })
     .then((data) => {
       if (data.owner.valueOf() === req.user._id) {
-        Movie.findByIdAndRemove(req.params.movieId, { new: true })
+        Movie.findByIdAndRemove(req.params._id, { new: true })
           .then((movie) => {
             res.status(200).send({ data: movie });
           });

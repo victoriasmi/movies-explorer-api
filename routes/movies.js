@@ -12,7 +12,7 @@ router.post(
   createMovie,
 );
 router.delete(
-  '/movies/:movieId',
+  '/movies/:_id',
   deletemovieValidation,
   deleteMovie,
 );
