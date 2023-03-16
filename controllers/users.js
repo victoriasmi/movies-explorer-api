@@ -76,7 +76,9 @@ module.exports.updateProfile = (req, res, next) => {
       res.status(200).send({ data: user });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.code === 11000) {
+        next(new ConflictError(conflictError)); }
+      else if (err.name === 'ValidationError') {
         next(new BadRequestError(badRequestError));
       } else {
         next(err);
