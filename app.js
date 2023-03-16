@@ -15,8 +15,8 @@ const NotFoundError = require('./errors/not-found-err');
 
 const options = {
   origin: [
-    'http://localhost:3000',
     'http://localhost:3001',
+    'http://localhost:3000',
     'https://diploma.project.nomoredomains.rocks',
   ],
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
