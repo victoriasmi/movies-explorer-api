@@ -18,7 +18,7 @@ module.exports.getMovie = (req, res, next) => {
 module.exports.createMovie = (req, res, next) => {
   const {
     country, director, duration, year, description, image,
-    trailerLink, id, nameRU, nameEN,
+    trailerLink, id, nameRU, nameEN
   } = req.body;
   Movie.create({
     country,
@@ -51,14 +51,14 @@ module.exports.deleteMovie = (req, res, next) => {
       throw new NotFoundError(notFoundError);
     })
     .then((data) => {
-      if (data.owner.valueOf() === req.user._id) {
-        Movie.findByIdAndRemove(req.params._id, { new: true })
-          .then((movie) => {
-            res.status(200).send({ data: movie });
-          });
-      } else {
-        next(new ForbiddenError(forbiddenError));
-      }
+      // if (data.owner.valueOf() === req.user._id) {
+      Movie.findByIdAndRemove(req.params._id, { new: true })
+        .then((movie) => {
+          res.status(200).send({ data: movie });
+        });
+      // } else {
+      //   next(new ForbiddenError(forbiddenError));
+      // }
     })
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
